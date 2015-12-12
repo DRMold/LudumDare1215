@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 
 	public short playerState;
 	public float globalCurvature = 0.05f;
+	public float worldRot;
 
 	protected GameController () {}
 	
@@ -87,15 +88,4 @@ public class GameController : MonoBehaviour {
 		
 	}
 
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Ground") {
-			other.transform.position = new Vector3(
-					0.0f,
-					0.0f,
-					other.transform.position.z + 370
-				);
-		} else if(other.tag == "Building") {
-			Destroy(other.gameObject);
-		}
-	}
 }
