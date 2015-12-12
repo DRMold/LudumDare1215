@@ -19,4 +19,8 @@ public class PlayerController : MonoBehaviour {
 
 		myBody.AddForce (movement * speed);
 	}
+
+	void OnTriggerEnter(Collider other) {
+
+	}
 }
