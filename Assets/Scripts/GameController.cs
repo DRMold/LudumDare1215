@@ -3,13 +3,19 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 	private bool gameOver;
+	private bool restart;
 	private bool paused;
 
 	public int buildCount;
 	public float spawnWait, startWait, waveWait;
 	public GameObject prefab;
 
-	public short playerState;
+	public GUIText scoreText; 
+	public GUIText restartText;
+	public GUIText gameOverText;
+
+	public short playerState; 
+	public float worldRot;
 	public float globalCurvature = 0.05f;
 
 	protected GameController () {}
@@ -36,10 +42,6 @@ public class GameController : MonoBehaviour {
 		}
 	
 		StartCoroutine (GenerateBuildings ());
-
-
-
-
 	}
 
 	// Update is called once per frame
@@ -49,20 +51,23 @@ public class GameController : MonoBehaviour {
 		else
 			Time.timeScale = 1;
 
-//		var chance = Random.value * 100;
-//		if (chance<20) {
-//			for (int i=0; i < chance; i++) {
-//				Instantiate(prefab,this.transform.position +(new Vector3(Mathf.Pow(-1, i)*7, 1.0f, i*5.0f)), Quaternion.identity);
-//			}
-//
-//		}
+		if (Input.GetKeyDown (KeyCode.P))
+		{ Pause (); }
+
+		if (Input.GetKeyDown (KeyCode.Q))
+		{ GameOver(); }
+
+		if (restart) {
+			if (Input.GetKeyDown (KeyCode.R))
+			{ Application.LoadLevel (Application.loadedLevel); }
+		}
 	}
 
 	public void Pause()
 	{ this.paused = !this.paused; }
 	
 	public void GameOver()
-	{ gameOver = true; } 
+	{ gameOver = true; gameOverText.text = "Game Over!"; } 
 	
 	public bool getGameOver()
 	{ return gameOver; }
@@ -79,23 +84,14 @@ public class GameController : MonoBehaviour {
 				Instantiate (prefab, position, Quaternion.Euler (270.0f, 0.0f, 180.0f + z));
 				yield return new WaitForSeconds(spawnWait);
 			}
-			
-			if (gameOver) {
+
+			if (gameOver)
+			{ 
+				restartText.text = "Press 'R' to restart.";
+				restart = true;
 				break;
 			}
 		}
 		
-	}
-
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Ground") {
-			other.transform.position = new Vector3(
-					0.0f,
-					0.0f,
-					other.transform.position.z + 370
-				);
-		} else if(other.tag == "Building") {
-			Destroy(other.gameObject);
-		}
 	}
 }

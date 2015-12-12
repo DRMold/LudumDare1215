@@ -4,7 +4,7 @@ using System.Collections;
 // Player Boundaries
 [System.Serializable] 
 public class Boundary 
-{ public float xMin, xMax, yMin, yMax, zMin, zMax; }
+{ public float xMin, xMax, zMin, zMax; }
 
 
 public class PlayerController : MonoBehaviour {
@@ -19,12 +19,12 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate () {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
+		float moveVertical = Input.GetAxis("Vertical");
 
-		Vector3 movement = new Vector3(moveHorizontal, 0.0f, rollSpeed);
-
-		myBody.AddForce (movement * speed);
-		if(myBody.velocity.magnitude > maxSpeed)
-		{
+		Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+		myBody.velocity = movement * speed;
+		//myBody.AddForce (movement * speed);
+		if(myBody.velocity.magnitude > maxSpeed) {
 			myBody.velocity = myBody.velocity.normalized * maxSpeed;
 		}
 
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour {
 			(
 				Mathf.Clamp (myBody.position.x, boundary.xMin, boundary.xMax), 
 				myBody.position.y,
-				myBody.position.z
+				Mathf.Clamp (myBody.position.z, boundary.zMin, boundary.zMax)
 			);
 	}
 }
