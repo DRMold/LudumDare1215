@@ -13,6 +13,11 @@
 			
 			uniform sampler2D _MainTex;
 			
+			struct vertexInput {
+				float4 vertex : POSITION;
+				float4 texcoord : TEXCOORD0;
+			}
+			
 			ENDCG
 			
 		}
