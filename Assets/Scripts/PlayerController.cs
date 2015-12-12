@@ -4,6 +4,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	public float speed;
+	public float rollSpeed;
 
 	private Rigidbody myBody;
 
@@ -14,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 
-		Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
+		Vector3 movement = new Vector3(moveHorizontal, 0.0f, rollSpeed);
 
 		myBody.AddForce (movement * speed);
 	}
