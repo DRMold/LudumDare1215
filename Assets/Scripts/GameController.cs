@@ -44,6 +44,11 @@ public class GameController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (paused || gameOver)
+			Time.timeScale = 0;
+		else
+			Time.timeScale = 1;
+
 //		var chance = Random.value * 100;
 //		if (chance<20) {
 //			for (int i=0; i < chance; i++) {
@@ -52,6 +57,16 @@ public class GameController : MonoBehaviour {
 //
 //		}
 	}
+
+	public void Pause()
+	{ this.paused = !this.paused; }
+	
+	public void GameOver()
+	{ gameOver = true; } 
+	
+	public bool getGameOver()
+	{ return gameOver; }
+
 
 	IEnumerator GenerateBuildings() {
 		float z = 0.0f;
