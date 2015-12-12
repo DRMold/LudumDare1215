@@ -8,19 +8,43 @@ public class PlayerLogic : MonoBehaviour {
 	public Camera mainCam;
 	public bool autoInit = false;
 
+	// parameters
+	public float switchDelay = 0.25f;
+
+	// Sprites
+	public Sprite baseCloud1;
+	public Sprite baseCloud2;
+
+	// private vars
 	private GameController gameController;
-	private Vector2 offset1 = new Vector2(0.0f,0.5f);
-	private Vector2 offset2;
+	private Sprite baseSprite;
+	private short currentAxis;
 
-
-	void Animate() {
+	void SwitchBaseSprite () {
 		if (gameController.playerState == 1) {
-			if (Time.time % 0.5 == 0) {
-				if (true) {
-
-				}
+			if (cloudPlane.GetComponent<SpriteRenderer>().sprite == baseCloud1) {
+				cloudPlane.GetComponent<SpriteRenderer>().sprite = baseCloud2;
+			} else {
+				cloudPlane.GetComponent<SpriteRenderer>().sprite = baseCloud1;
 			}
 		}
+	}
+
+
+
+	void AnimateOnStart() {
+		InvokeRepeating("SwitchBaseSprite",switchDelay,switchDelay);
+	}
+
+	void AnimateOnUpdate() {
+		Vector3 newScale = cloudPlane.transform.localScale;
+		float pingPong = Mathf.PingPong(Time.time / 2, 0.2f) + 0.4f;
+		if (currentAxis = 0) {
+			newScale.x = pingPong;
+		} else {
+			newScale.y = pingPong;
+		}
+		cloudPlane.transform.localScale = newScale;
 	}
 
 	void Awake () {
@@ -36,6 +60,10 @@ public class PlayerLogic : MonoBehaviour {
 		// init variables
 		cloudPlane = transform.Find("CloudPlane").gameObject;
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
+		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
+		currentAxis = 0;
+		// Run funcs
+		AnimateOnStart ();
 	}
 	
 	// Update is called once per frame
@@ -47,5 +75,6 @@ public class PlayerLogic : MonoBehaviour {
 		// Rotate to camera orientation
 		cloudPlane.transform.rotation = Quaternion.identity;
 		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
+		AnimateOnUpdate();
 	}
 }
