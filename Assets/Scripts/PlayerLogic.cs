@@ -11,10 +11,15 @@ public class PlayerLogic : MonoBehaviour {
 	// parameters
 	public float cloudSwitchDelay = 0.25f;
 	public float axisSwitchDelay = 0.5f;
+	public float xCloudSpawnRange = 0.3f;
+	public float yCloudSpawnRange = 0.3f;
+
 
 	// Sprites
 	public Sprite baseCloud1;
 	public Sprite baseCloud2;
+	public GameObject[] cloudGreebles;
+
 
 	// private vars
 	private GameController gameController;
@@ -41,6 +46,28 @@ public class PlayerLogic : MonoBehaviour {
 		}
 	}
 
+	void AnimateCloudGreebles () {
+		foreach (GameObject g in cloudGreebles) {
+			if (g.GetComponent<Renderer>().enabled == false) {
+				if (Random.value < 0.33f) {
+					g.transform.localPosition = new Vector3 (Random.Range(-xCloudSpawnRange,xCloudSpawnRange),Random.Range(0.5f - yCloudSpawnRange, 0.5f + yCloudSpawnRange), 0.1f);
+					g.GetComponent<Renderer>().enabled = true;
+				}
+			} else {
+				if (Random.value < 0.33f) {
+					g.GetComponent<Renderer>().enabled = false;
+				} else {
+					Vector3 newScale = g.transform.localScale;
+					float pingPong = Mathf.PingPong(Time.time / 2, 0.2f) + 0.4f;
+					if (currentAxis == 1) {
+						newScale.x = pingPong;
+					} else {
+						newScale.y = pingPong;
+					}
+				}
+			}
+		}
+	}
 
 
 	void AnimateOnStart() {
@@ -74,6 +101,11 @@ public class PlayerLogic : MonoBehaviour {
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
 		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
 		currentAxis = 0;
+		// set children to parents
+		foreach (GameObject g in cloudGreebles) {
+			// CODE HERE
+		}
+
 		// Run funcs
 		AnimateOnStart ();
 	}
