@@ -1,1 +1,1 @@
-BUSH HID THE FACTS
+From the beginning, WRITE WHATEVER
