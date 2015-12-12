@@ -22,7 +22,12 @@ public class PlayerLogic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+	
+	}
+
+	void LateUpdate () {
 		// Rotate to camera orientation
+		cloudPlane.transform.rotation = Quaternion.identity;
 		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
 	}
 }
