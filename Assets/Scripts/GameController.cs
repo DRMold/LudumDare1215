@@ -30,4 +30,14 @@ public class GameController : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	void OnTriggerExit(Collider other){
+		if (other.tag == "Ground") {
+			other.transform.position = new Vector3(
+					0.0f,
+					0.0f,
+					other.transform.position.z + 370
+				);
+		}
+	}
 }
