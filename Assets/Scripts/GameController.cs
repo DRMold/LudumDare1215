@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour {
 	public GameObject prefab;
 
 	public short playerState;
+	public float globalCurvature = 0.05f;
 
 	protected GameController () {}
 	
@@ -19,6 +20,8 @@ public class GameController : MonoBehaviour {
 //				} else if (instance != this) {
 //					Destroy(gameObject);
 //				}
+
+		Shader.SetGlobalFloat("_GlobalCurvature", globalCurvature);
 		
 		DontDestroyOnLoad(gameObject);
 	}
@@ -33,6 +36,10 @@ public class GameController : MonoBehaviour {
 		}
 	
 		StartCoroutine (GenerateBuildings ());
+
+
+
+
 	}
 
 	// Update is called once per frame
