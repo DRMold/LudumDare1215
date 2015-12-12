@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerLogic : MonoBehaviour {
 
@@ -11,14 +12,15 @@ public class PlayerLogic : MonoBehaviour {
 	// parameters
 	public float cloudSwitchDelay = 0.25f;
 	public float axisSwitchDelay = 0.5f;
-	public float xCloudSpawnRange = 0.3f;
-	public float yCloudSpawnRange = 0.3f;
+	public float xCloudSpawnRange = 1.0f;
+	public float yCloudSpawnRange = 1.0f;
+	public float greebleSpawnRate = 1.5f;
 
 
 	// Sprites
 	public Sprite baseCloud1;
 	public Sprite baseCloud2;
-	public GameObject[] cloudGreebles;
+	public List<GameObject> cloudGreebles = new List<GameObject>();
 
 
 	// private vars
@@ -46,25 +48,14 @@ public class PlayerLogic : MonoBehaviour {
 		}
 	}
 
-	void AnimateCloudGreebles () {
-		foreach (GameObject g in cloudGreebles) {
-			if (g.GetComponent<Renderer>().enabled == false) {
-				if (Random.value < 0.33f) {
-					g.transform.localPosition = new Vector3 (Random.Range(-xCloudSpawnRange,xCloudSpawnRange),Random.Range(0.5f - yCloudSpawnRange, 0.5f + yCloudSpawnRange), 0.1f);
-					g.GetComponent<Renderer>().enabled = true;
-				}
-			} else {
-				if (Random.value < 0.33f) {
-					g.GetComponent<Renderer>().enabled = false;
-				} else {
-					Vector3 newScale = g.transform.localScale;
-					float pingPong = Mathf.PingPong(Time.time / 2, 0.2f) + 0.4f;
-					if (currentAxis == 1) {
-						newScale.x = pingPong;
-					} else {
-						newScale.y = pingPong;
-					}
-				}
+	void SpawnCloudGreebles () {
+		float chance = Random.value;
+		if (chance <= 0.66f) {
+			if (cloudGreebles.Count <= 4) {
+				GameObject greeble = Instantiate(cloudGreebles[Random.Range(0,cloudGreebles.Count-1)]) ;
+				greeble.transform.parent = this.gameObject.transform;
+				greeble.transform.localPosition = new Vector3 (Random.Range (-xCloudSpawnRange,xCloudSpawnRange),Random.Range(-yCloudSpawnRange, yCloudSpawnRange), -0.1f);
+				Destroy(greeble,3.0f);
 			}
 		}
 	}
@@ -73,6 +64,7 @@ public class PlayerLogic : MonoBehaviour {
 	void AnimateOnStart() {
 		InvokeRepeating("SwitchBaseSprite",cloudSwitchDelay,cloudSwitchDelay);
 		InvokeRepeating("SwitchAxis", axisSwitchDelay, axisSwitchDelay);
+		InvokeRepeating("SpawnCloudGreebles", greebleSpawnRate, greebleSpawnRate);
 	}
 
 	void AnimateOnUpdate() {
