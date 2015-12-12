@@ -18,5 +18,5 @@ public class PlayerController : MonoBehaviour {
 		Vector3 movement = new Vector3(moveHorizontal, 0.0f, rollSpeed);
 
 		myBody.AddForce (movement * speed);
-	} Instantiate
+	}
 }

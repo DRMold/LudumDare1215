@@ -9,7 +9,8 @@ public class PlayerLogic : MonoBehaviour {
 	public bool autoInit = false;
 
 	// parameters
-	public float switchDelay = 0.25f;
+	public float cloudSwitchDelay = 0.25f;
+	public float axisSwitchDelay = 0.5f;
 
 	// Sprites
 	public Sprite baseCloud1;
@@ -30,16 +31,27 @@ public class PlayerLogic : MonoBehaviour {
 		}
 	}
 
+	void SwitchAxis () {
+		if (gameController.playerState == 1) {
+			if (currentAxis == 0) {
+				currentAxis = 1;
+			} else {
+				currentAxis = 0;
+			}
+		}
+	}
+
 
 
 	void AnimateOnStart() {
-		InvokeRepeating("SwitchBaseSprite",switchDelay,switchDelay);
+		InvokeRepeating("SwitchBaseSprite",cloudSwitchDelay,cloudSwitchDelay);
+		InvokeRepeating("SwitchAxis", axisSwitchDelay, axisSwitchDelay);
 	}
 
 	void AnimateOnUpdate() {
 		Vector3 newScale = cloudPlane.transform.localScale;
 		float pingPong = Mathf.PingPong(Time.time / 2, 0.2f) + 0.4f;
-		if (currentAxis = 0) {
+		if (currentAxis == 0) {
 			newScale.x = pingPong;
 		} else {
 			newScale.y = pingPong;
@@ -76,5 +88,7 @@ public class PlayerLogic : MonoBehaviour {
 		cloudPlane.transform.rotation = Quaternion.identity;
 		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
 		AnimateOnUpdate();
+		// clamp bottom to top of ground
+
 	}
 }
