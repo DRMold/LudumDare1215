@@ -12,15 +12,11 @@ public class PlayerController : MonoBehaviour {
 		myBody = GetComponent<Rigidbody> ();
 	}
 
-	void Update () {
+	void FixedUpdate () {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 
 		Vector3 movement = new Vector3(moveHorizontal, 0.0f, rollSpeed);
 
 		myBody.AddForce (movement * speed);
-	}
-
-	void OnTriggerEnter(Collider other) {
-
 	}
 }
