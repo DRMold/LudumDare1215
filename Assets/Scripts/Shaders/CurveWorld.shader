@@ -1,6 +1,8 @@
 ﻿Shader "34/CurvedWorld" {
 	Properties {
+		
 		_MainTex ("Main Texture", 2D) = "white" {}
+		_DiffuseColor ("Diffuse Color", Color) = (1,1,1,1)
 		_Intensity ("Intensity", Float) = 0.001
 	}
 	
@@ -14,6 +16,7 @@
         
         uniform sampler2D _MainTex;
         uniform float _Intensity;
+        uniform float4 _DiffuseColor;
  
         // UVs
         struct Input {
@@ -39,8 +42,8 @@
         // This is just a default surface shader
         void surf (Input input, inout SurfaceOutput output) {
             half4 col = tex2D (_MainTex, input.uv_MainTex);
-            output.Albedo = col.rgb;
-            output.Alpha = col.a;
+            output.Albedo = _DiffuseColor.rgb;
+            output.Alpha = _DiffuseColor.a;
         }
         ENDCG
     }
