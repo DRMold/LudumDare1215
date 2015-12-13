@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
 	public short playerState; 
 	public float worldRot;
 	public float globalCurvature = 0.05f;
+	public float worldRot;
 
 	protected GameController () {}
 	
@@ -94,4 +95,8 @@ public class GameController : MonoBehaviour {
 		}
 		
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4869345e5ddbc58d606debdae7acb42e274ba9a4
 }

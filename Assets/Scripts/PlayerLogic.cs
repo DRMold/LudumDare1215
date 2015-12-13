@@ -12,9 +12,10 @@ public class PlayerLogic : MonoBehaviour {
 	// parameters
 	public float cloudSwitchDelay = 0.25f;
 	public float axisSwitchDelay = 0.5f;
-	public float xCloudSpawnRange = 1.0f;
-	public float yCloudSpawnRange = 1.0f;
-	public float greebleSpawnRate = 1.5f;
+	public float xCloudSpawnRange = 0.8f;
+	public float yCloudSpawnRange = 0.3f;
+	public float greebleSpawnRate = 0.5f;
+	public float xPositionThreshold = 2.0f;
 
 
 	// Sprites
@@ -48,15 +49,25 @@ public class PlayerLogic : MonoBehaviour {
 		}
 	}
 
+	IEnumerator Fade (GameObject go, float time, float alpha) {
+		float a = go.GetComponent<Renderer>().material.color.a;
+		for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / time) {
+			Color c = new Color(1,1,1, Mathf.Lerp(a,alpha,t));
+			go.GetComponent<Renderer>().material.color = c;
+			yield return null;
+		}
+	}
+
 	void SpawnCloudGreebles () {
 		float chance = Random.value;
 		if (chance <= 0.66f) {
-			if (cloudGreebles.Count <= 4) {
-				GameObject greeble = Instantiate(cloudGreebles[Random.Range(0,cloudGreebles.Count-1)]) ;
-				greeble.transform.parent = this.gameObject.transform;
-				greeble.transform.localPosition = new Vector3 (Random.Range (-xCloudSpawnRange,xCloudSpawnRange),Random.Range(-yCloudSpawnRange, yCloudSpawnRange), -0.1f);
-				Destroy(greeble,3.0f);
-			}
+			GameObject greeble = Instantiate(cloudGreebles[Random.Range(0,cloudGreebles.Count-1)]);
+			greeble.transform.parent = this.gameObject.transform;
+			greeble.transform.localPosition = new Vector3 (Random.Range (-xCloudSpawnRange,xCloudSpawnRange),Random.Range(-yCloudSpawnRange, yCloudSpawnRange), -0.1f);
+			greeble.GetComponent<Rigidbody>().AddTorque(new Vector3(0.0f,0.0f,Random.Range(-100f, 100f)));
+			greeble.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-0.3f,0.3f),Random.Range(2.0f, 10.0f),0.0f));
+			StartCoroutine(Fade (greeble,1.5f,0.0f));
+			Destroy(greeble,1.5f);
 		}
 	}
 
@@ -64,7 +75,7 @@ public class PlayerLogic : MonoBehaviour {
 	void AnimateOnStart() {
 		InvokeRepeating("SwitchBaseSprite",cloudSwitchDelay,cloudSwitchDelay);
 		InvokeRepeating("SwitchAxis", axisSwitchDelay, axisSwitchDelay);
-		InvokeRepeating("SpawnCloudGreebles", greebleSpawnRate, greebleSpawnRate);
+		InvokeRepeating("SpawnCloudGreebles", 0.0f, greebleSpawnRate);
 	}
 
 	void AnimateOnUpdate() {
@@ -94,9 +105,6 @@ public class PlayerLogic : MonoBehaviour {
 		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
 		currentAxis = 0;
 		// set children to parents
-		foreach (GameObject g in cloudGreebles) {
-			// CODE HERE
-		}
 
 		// Run funcs
 		AnimateOnStart ();
@@ -112,7 +120,6 @@ public class PlayerLogic : MonoBehaviour {
 		cloudPlane.transform.rotation = Quaternion.identity;
 		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
 		AnimateOnUpdate();
-		// clamp bottom to top of ground
-
+		// clamp bottom to top of ground`
 	}
 }
