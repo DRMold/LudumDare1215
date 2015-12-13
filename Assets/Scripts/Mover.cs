@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Mover : MonoBehaviour
 {
-	public float speed;
+	public GameController GameMaster;
 
 	void Start(){ 
-		GetComponent<Rigidbody>().velocity = new Vector3(0.0f, 0.0f,-transform.position.z) * speed; 
+		GetComponent<Rigidbody>().velocity = new Vector3(0.0f, 0.0f,-this.transform.position.z) * GameMaster.worldRot; 
 	}
 }
