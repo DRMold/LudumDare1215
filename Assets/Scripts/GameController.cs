@@ -15,9 +15,9 @@ public class GameController : MonoBehaviour {
 	public GameObject civilPrefab;
 
 	private float score;
-	public GUIText scoreText; 
-	public GUIText restartText;
-	public GUIText gameOverText;
+//	public GUIText scoreText; 
+//	public GUIText restartText;
+//	public GUIText gameOverText;
 
 	public short playerState; 
 	public float worldRot;
@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour {
 	void Start () {
 		score = 0;
 		gameOver = false;
+		restart = false;
 		paused = false;
 
 		if (playerState == null || playerState == 0) {
@@ -67,8 +68,11 @@ public class GameController : MonoBehaviour {
 	public void Pause()
 	{ this.paused = !this.paused; }
 	
-	public void GameOver()
-	{ gameOver = true; gameOverText.text = "Game Over!"; } 
+	public void GameOver(){
+		gameOver = true; 
+		restart = true;
+//		gameOverText.text = "Game Over!"; 
+	} 
 	
 	public bool getGameOver()
 	{ return gameOver; }
@@ -91,7 +95,7 @@ public class GameController : MonoBehaviour {
 
 			if (gameOver)
 			{ 
-				restartText.text = "Press 'R' to restart.";
+//				restartText.text = "Press 'R' to restart.";
 				restart = true;
 				break;
 			}
@@ -104,14 +108,14 @@ public class GameController : MonoBehaviour {
 		while (true) {
 			yield return new WaitForSeconds(civilWaveWait);
 			for (int i=0; i<buildCount; i++) {
-				Vector3 position = new Vector3(Mathf.Pow(-1, i)*7, 1.0f, 300 + this.transform.position.z);
+				Vector3 position = new Vector3(Mathf.Pow(-1, i)*6, 1.0f, 300 + this.transform.position.z);
 				Instantiate (civilPrefab, position, Quaternion.identity);
 				yield return new WaitForSeconds(civilSpawnWait);
 			}
 			
 			if (gameOver)
 			{ 
-				restartText.text = "Press 'R' to restart.";
+//				restartText.text = "Press 'R' to restart.";
 				restart = true;
 				break;
 			}
