@@ -7,9 +7,14 @@ public class GameController : MonoBehaviour {
 	private bool paused;
 
 	public int buildCount;
-	public float spawnWait, startWait, waveWait;
+	public float houseSpawnWait, houseStartWait, houseWaveWait;
 	public GameObject housePrefab;
 
+	public int civilCount;
+	public float civilSpawnWait, civilStartWait, civilWaveWait;
+	public GameObject civilPrefab;
+
+	private float score;
 	public GUIText scoreText; 
 	public GUIText restartText;
 	public GUIText gameOverText;
@@ -28,6 +33,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		score = 0;
 		gameOver = false;
 		paused = false;
 
@@ -36,6 +42,7 @@ public class GameController : MonoBehaviour {
 		}
 	
 		StartCoroutine (GenerateBuildings ());
+		StartCoroutine (GenerateCivillians ());
 	}
 
 	// Update is called once per frame
@@ -66,19 +73,42 @@ public class GameController : MonoBehaviour {
 	public bool getGameOver()
 	{ return gameOver; }
 
+	public void AddScore()
+	{ score += 100; }
+
 
 	IEnumerator GenerateBuildings() {
 		float z = 0.0f;
-		yield return new WaitForSeconds (startWait);
+		yield return new WaitForSeconds (houseStartWait);
 		while (true) {
-			yield return new WaitForSeconds(waveWait);
+			yield return new WaitForSeconds(houseWaveWait);
 			for (int i=0; i<buildCount; i++) {
 				Vector3 position = new Vector3(Mathf.Pow(-1, i)*10, 1.0f, 300 + this.transform.position.z);
 				if (z == 180) {z=0.0f;} else {z=180.0f;}
 				Instantiate (housePrefab, position, Quaternion.Euler (270.0f, 0.0f, 180.0f + z));
-				yield return new WaitForSeconds(spawnWait);
+				yield return new WaitForSeconds(houseSpawnWait);
 			}
 
+			if (gameOver)
+			{ 
+				restartText.text = "Press 'R' to restart.";
+				restart = true;
+				break;
+			}
+		}
+		
+	}
+
+	IEnumerator GenerateCivillians() {
+		yield return new WaitForSeconds (civilStartWait);
+		while (true) {
+			yield return new WaitForSeconds(civilWaveWait);
+			for (int i=0; i<buildCount; i++) {
+				Vector3 position = new Vector3(Mathf.Pow(-1, i)*7, 1.0f, 300 + this.transform.position.z);
+				Instantiate (civilPrefab, position, Quaternion.identity);
+				yield return new WaitForSeconds(civilSpawnWait);
+			}
+			
 			if (gameOver)
 			{ 
 				restartText.text = "Press 'R' to restart.";
