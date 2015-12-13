@@ -9,7 +9,7 @@ public class DestroyByBoundary : MonoBehaviour {
 				0.0f,
 				other.transform.position.z + 370
 				);
-		} else if(other.tag == "Building") {
+		} else {
 			Destroy(other.gameObject);
 		}
 	}

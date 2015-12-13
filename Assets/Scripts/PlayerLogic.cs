@@ -2,7 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// Player Boundaries
+[System.Serializable] 
+public class Boundary 
+{ public float xMin, xMax, zMin, zMax; }
+
 public class PlayerLogic : MonoBehaviour {
+	public Boundary boundary;
+	public float speed, rollSpeed, maxSpeed;
+	
+	private Rigidbody myBody;
+
+	public float rage;
+	private int numPpl;
+
 
 	public GameObject cloudPlane;
 	public GameObject gameMaster;
@@ -97,9 +110,15 @@ public class PlayerLogic : MonoBehaviour {
 
 	}
 
+	public void InvolveInFight() {
+		numPpl++;
+		gameMaster.GetComponent<GameController>().AddScore();
+	}
+
 	// Use this for initialization
 	void Start () {
 		// init variables
+		myBody = GetComponent<Rigidbody> ();
 		cloudPlane = transform.Find("CloudPlane").gameObject;
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
 		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
@@ -110,9 +129,24 @@ public class PlayerLogic : MonoBehaviour {
 		AnimateOnStart ();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	void FixedUpdate () {
+		float moveHorizontal = Input.GetAxis ("Horizontal");
+		float moveVertical = Input.GetAxis("Vertical");
+		
+		Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+		myBody.velocity = movement * speed;
+		//myBody.AddForce (movement * speed);
+		if(myBody.velocity.magnitude > maxSpeed) {
+			myBody.velocity = myBody.velocity.normalized * maxSpeed;
+		}
+		
+		
+		GetComponent<Rigidbody> ().position = new Vector3
+			(
+				Mathf.Clamp (myBody.position.x, boundary.xMin, boundary.xMax), 
+				myBody.position.y,
+				Mathf.Clamp (myBody.position.z, boundary.zMin, boundary.zMax)
+				);
 	}
 
 	void LateUpdate () {
