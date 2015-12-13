@@ -112,7 +112,8 @@ public class PlayerLogic : MonoBehaviour {
 	}
 
 	public void TakeDamage() {
-		if (--health == 2) {
+		health = health - 1;
+		if (health == 2) {
 			healthUI.sprite = sprite1;
 		} else if (health == 1) {
 			healthUI.sprite = sprite2;
@@ -122,9 +123,18 @@ public class PlayerLogic : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionEnter(Collision coll) {
+		if (coll.gameObject.tag == "Civillian") {
+			InvolveInFight ();
+			Destroy (coll.gameObject);
+		} else if (coll.gameObject.tag == "Vehicle") {
+			numPpl = Mathf.Max (0, numPpl - 1);
+			TakeDamage (); 
+		}
+	}
+
 	public void InvolveInFight() {
 		numPpl++;
-		TakeDamage (); 
 		gameController.AddScore();
 	}
 
@@ -152,11 +162,12 @@ public class PlayerLogic : MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
+		rollSpeed = rollSpeed + rage;
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis("Vertical");
-		
-		Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-		myBody.velocity = movement * speed;
+
+		Vector3 movement = new Vector3(moveHorizontal * speed, 0.0f, moveVertical * rollSpeed);
+		myBody.velocity = movement;
 		//myBody.AddForce (movement * speed);
 		if(myBody.velocity.magnitude > maxSpeed) {
 			myBody.velocity = myBody.velocity.normalized * maxSpeed;
@@ -168,7 +179,7 @@ public class PlayerLogic : MonoBehaviour {
 				Mathf.Clamp (myBody.position.x, boundary.xMin, boundary.xMax), 
 				myBody.position.y,
 				Mathf.Clamp (myBody.position.z, boundary.zMin, boundary.zMax)
-				);
+			);
 	}
 
 	void LateUpdate () {

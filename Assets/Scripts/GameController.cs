@@ -15,9 +15,9 @@ public class GameController : MonoBehaviour {
 	public GameObject civilPrefab;
 
 	private float score;
-	public GUIText scoreText; 
-	public GUIText restartText;
-	public GUIText gameOverText;
+//	public GUIText scoreText; 
+//	public GUIText restartText;
+//	public GUIText gameOverText;
 
 	public short playerState; 
 	public float worldRot;
@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour {
 	public void GameOver(){
 		gameOver = true; 
 		restart = true;
-		gameOverText.text = "Game Over!"; 
+//		gameOverText.text = "Game Over!"; 
 	} 
 	
 	public bool getGameOver()
@@ -95,7 +95,7 @@ public class GameController : MonoBehaviour {
 
 			if (gameOver)
 			{ 
-				restartText.text = "Press 'R' to restart.";
+//				restartText.text = "Press 'R' to restart.";
 				restart = true;
 				break;
 			}
@@ -115,7 +115,7 @@ public class GameController : MonoBehaviour {
 			
 			if (gameOver)
 			{ 
-				restartText.text = "Press 'R' to restart.";
+//				restartText.text = "Press 'R' to restart.";
 				restart = true;
 				break;
 			}

@@ -1,12 +1,13 @@
 fileFormatVersion: 2
-guid: e1bfc1426b5c86942b5bc9996d5c0d67
-timeCreated: 1450038104
+guid: a0499a1078316ac4ea9cbfcab0421858
+timeCreated: 1449999632
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Rage_0
-    21300002: Rage_1
-    21300004: Rage_2
+    21300000: healthAvatar_0
+    21300002: healthAvatar_1
+    21300004: healthAvatar_2
+    21300006: healthAvatar_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -52,33 +53,43 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: Rage_0
+    - name: healthAvatar_0
       rect:
         serializedVersion: 2
-        x: 101
-        y: 318
-        width: 732
-        height: 276
+        x: 0
+        y: 300
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Rage_1
+    - name: healthAvatar_1
       rect:
         serializedVersion: 2
-        x: 14
-        y: 5
-        width: 185
-        height: 166
+        x: 300
+        y: 300
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Rage_2
+    - name: healthAvatar_2
       rect:
         serializedVersion: 2
-        x: 745
-        y: 7
-        width: 142
-        height: 168
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: healthAvatar_3
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
