@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,21 +9,13 @@ public class Boundary
 { public float xMin, xMax, zMin, zMax; }
 
 public class PlayerLogic : MonoBehaviour {
-	public Boundary boundary;
-	public float speed, rollSpeed, maxSpeed;
-	
-	private Rigidbody myBody;
-
-	public float rage;
-	private int numPpl;
-
-
 	public GameObject cloudPlane;
-	public GameObject gameMaster;
 	public Camera mainCam;
 	public bool autoInit = false;
 
 	// parameters
+	public Boundary boundary;
+	public float speed, rollSpeed, maxSpeed;
 	public float cloudSwitchDelay = 0.25f;
 	public float axisSwitchDelay = 0.5f;
 	public float xCloudSpawnRange = 0.8f;
@@ -32,15 +25,23 @@ public class PlayerLogic : MonoBehaviour {
 
 
 	// Sprites
+	public Sprite sprite0;
+	public Sprite sprite1;
+	public Sprite sprite2;
+	public Sprite sprite3;
 	public Sprite baseCloud1;
 	public Sprite baseCloud2;
 	public List<GameObject> cloudGreebles = new List<GameObject>();
+	private Image healthUI;
 
 
 	// private vars
+	private Rigidbody myBody;
 	private GameController gameController;
 	private Sprite baseSprite;
 	private short currentAxis;
+	private float rage;
+	private int numPpl, health;
 
 	void SwitchBaseSprite () {
 		if (gameController.playerState == 1) {
@@ -110,23 +111,44 @@ public class PlayerLogic : MonoBehaviour {
 
 	}
 
+	public void TakeDamage() {
+		if (--health == 2) {
+			healthUI.sprite = sprite1;
+		} else if (health == 1) {
+			healthUI.sprite = sprite2;
+		} else if (health == 0) {
+			healthUI.sprite = sprite3;
+			gameController.GameOver();
+		}
+	}
+
 	public void InvolveInFight() {
 		numPpl++;
-		gameMaster.GetComponent<GameController>().AddScore();
+		TakeDamage (); 
+		gameController.AddScore();
 	}
 
 	// Use this for initialization
 	void Start () {
 		// init variables
+		numPpl = 0;
+		health = 3;
 		myBody = GetComponent<Rigidbody> ();
 		cloudPlane = transform.Find("CloudPlane").gameObject;
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
+		healthUI = GameObject.FindGameObjectWithTag ("HealthUI").GetComponent<Image> ();
 		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
 		currentAxis = 0;
+		healthUI.sprite = sprite0;
 		// set children to parents
 
 		// Run funcs
 		AnimateOnStart ();
+	}
+
+	void Update() {
+		rage = numPpl + 1;
+		gameObject.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f) * Mathf.Min(rage, 5);
 	}
 	
 	void FixedUpdate () {
