@@ -93,10 +93,10 @@ public class GameController : MonoBehaviour {
 				Vector3 position = new Vector3
 					(
 						Mathf.Pow(-1, i)*4, 
-						1.0f,
+						2.5f,
 						300 + this.transform.position.z
 						);
-				Instantiate (carPrefab, position, Quaternion.identity);
+				Instantiate (carPrefab, position, Quaternion.Euler (-90.0f, 0.0f, 0.0f));
 				yield return new WaitForSeconds(Random.Range (1, 5));
 			}
 			
