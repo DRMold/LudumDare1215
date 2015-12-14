@@ -166,7 +166,7 @@ public class PlayerLogic : MonoBehaviour {
 				1.0f, 
 				1.0f,
 				1.0f
-			) * Mathf.Min(Mathf.Max (1, rage), 4);
+			) *(0.5f + (rage/rageLimit)*4);
 	}
 	
 	void FixedUpdate () {
@@ -176,10 +176,10 @@ public class PlayerLogic : MonoBehaviour {
 			(
 				moveHorizontal*speed,
 				0.0f,
-				0.0f
+				0.001f * rollSpeed
 			);
 		myBody.velocity = movement;
-		myBody.AddForce (movement * rollSpeed * (rage/rageLimit));
+		//myBody.AddForce (movement * (rage/rageLimit));
 		if(myBody.velocity.magnitude > maxSpeed) {
 			myBody.velocity = myBody.velocity.normalized * maxSpeed;
 		}

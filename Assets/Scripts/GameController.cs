@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
@@ -57,7 +57,7 @@ public class GameController : MonoBehaviour {
 			Time.timeScale = 0;
 		else
 			Time.timeScale = 1;
-		
+
 		if (Input.GetKeyDown (KeyCode.P))
 		{ Pause (); }
 		
@@ -137,15 +137,21 @@ public class GameController : MonoBehaviour {
 	
 	IEnumerator GenerateCivillians() {
 		yield return new WaitForSeconds (civilStartWait);
+		float xLoc;
 		while (true) {
 			yield return new WaitForSeconds(Random.Range (0.0f, 4.0f));
 			for (int i=0; i<=civilCount; i++) {
+				if (Random.value > 0.9f) {
+					xLoc = 0;
+				} else {
+					xLoc = Mathf.Pow(-1, i)*6;
+				}
 				Vector3 position = new Vector3
 					(
-						Mathf.Pow(-1, i)*6, 
+						xLoc, 
 						1.0f, 
 						300 + this.transform.position.z
-						);
+					);
 				Instantiate (civilPrefab, position, Quaternion.identity);
 				yield return new WaitForSeconds(Random.Range (0.5f, 1.5f));
 			}
