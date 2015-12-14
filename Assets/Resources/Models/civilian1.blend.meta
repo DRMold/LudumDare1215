@@ -34,6 +34,9 @@ ModelImporter:
     100052: R__Upper_Arm
     100054: R__Waist
     100056: R__Wrist
+    100058: Empty
+    100060: Chest
+    100062: Master
     400000: Abdomen
     400002: Armature_024
     400004: Chest__Master_
@@ -63,8 +66,15 @@ ModelImporter:
     400052: R__Upper_Arm
     400054: R__Waist
     400056: R__Wrist
+    400058: Empty
+    400060: Chest
+    400062: Master
     4300000: Cube
     7400000: Default Take
+    7400002: PoseLib
+    7400004: Armature_024Action
+    7400006: Action
+    7400008: Run
     9500000: //RootNode
     13700000: Cube
   materials:
