@@ -152,7 +152,7 @@ public class GameController : MonoBehaviour {
 						1.0f, 
 						300 + this.transform.position.z
 					);
-				Instantiate (civilPrefab, position, Quaternion.identity);
+				Instantiate (civilPrefab, position, Quaternion.Euler(0.0f,180.0f,0.0f));
 				yield return new WaitForSeconds(Random.Range (0.5f, 1.5f));
 			}
 			
