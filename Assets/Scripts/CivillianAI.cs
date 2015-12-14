@@ -19,7 +19,7 @@ public class CivillianAI : MonoBehaviour {
 				0.0f, 
 				0.0f,
 				-this.transform.position.z
-			) * GameMaster.worldRot; 
+			) * GameMaster.worldRot * 0.8f; 
 	}
 
 	void Update () {
@@ -50,7 +50,12 @@ public class CivillianAI : MonoBehaviour {
 				GameObject.FindGameObjectWithTag ("Building").transform.position,
 				GameMaster.worldRot
 			);
-		GetComponent<Rigidbody> ().velocity = 0.25f * runTo;
+		GetComponent<Rigidbody> ().velocity = new Vector3
+			(
+				-runTo.x,
+				0.0f,
+				-runTo.z
+			) * 0.75f;
 	}
 
 	void OnCollisionEnter(Collision coll) {
@@ -59,6 +64,8 @@ public class CivillianAI : MonoBehaviour {
 			Destroy (this.gameObject);
 		} else if (coll.gameObject.tag == "Building") {
 			Destroy (this.gameObject);
+		} else if (coll.gameObject.tag == "Vehicle") {
+			Destroy (this.gameObject, 5);
 		}
 	}
 }
