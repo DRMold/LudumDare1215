@@ -15,6 +15,7 @@ public class PlayerLogic : MonoBehaviour {
 
 	// parameters
 	public Boundary boundary;
+	public float rageLimit;
 	public float speed, rollSpeed, maxSpeed;
 	public float cloudSwitchDelay = 0.25f;
 	public float axisSwitchDelay = 0.5f;
@@ -39,9 +40,10 @@ public class PlayerLogic : MonoBehaviour {
 	private Rigidbody myBody;
 	private GameController gameController;
 	private Sprite baseSprite;
+	private Renderer rageBar;
 	private short currentAxis;
 	private float rage;
-	private int numPpl, health;
+	private int health;
 
 	void SwitchBaseSprite () {
 		if (gameController.playerState == 1) {
@@ -128,22 +130,23 @@ public class PlayerLogic : MonoBehaviour {
 			InvolveInFight ();
 			Destroy (coll.gameObject);
 		} else if (coll.gameObject.tag == "Vehicle") {
-			numPpl = Mathf.Max (0, numPpl - 1);
+			rage = Mathf.Max (0, rage - 1);
 			TakeDamage (); 
 		}
 	}
 
 	public void InvolveInFight() {
-		numPpl++;
+		rage++;
 		gameController.AddScore();
 	}
 
 	// Use this for initialization
 	void Start () {
 		// init variables
-		numPpl = 0;
+		rage = 0.5f;
 		health = 3;
 		myBody = GetComponent<Rigidbody> ();
+		rageBar = GameObject.FindGameObjectWithTag ("Rage").GetComponent<Renderer> ();
 		cloudPlane = transform.Find("CloudPlane").gameObject;
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
 		healthUI = GameObject.FindGameObjectWithTag ("HealthUI").GetComponent<Image> ();
@@ -157,18 +160,26 @@ public class PlayerLogic : MonoBehaviour {
 	}
 
 	void Update() {
-		rage = numPpl + 1;
-		gameObject.transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f) * Mathf.Min(rage, 5);
+		//Increase player size as a function of rage
+		gameObject.transform.localScale = new Vector3 
+			(
+				1.0f, 
+				1.0f,
+				1.0f
+			) * Mathf.Min(Mathf.Max (1, rage), 4);
 	}
 	
 	void FixedUpdate () {
-		rollSpeed = rollSpeed + rage;
 		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis("Vertical");
 
-		Vector3 movement = new Vector3(moveHorizontal * speed, 0.0f, moveVertical * rollSpeed);
+		Vector3 movement = new Vector3
+			(
+				moveHorizontal*speed,
+				0.0f,
+				0.0f
+			);
 		myBody.velocity = movement;
-		//myBody.AddForce (movement * speed);
+		myBody.AddForce (movement * rollSpeed * (rage/rageLimit));
 		if(myBody.velocity.magnitude > maxSpeed) {
 			myBody.velocity = myBody.velocity.normalized * maxSpeed;
 		}
@@ -183,6 +194,11 @@ public class PlayerLogic : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+		// Adjust rage bar
+		float width = rageBar.material.GetFloat ("_Width");
+		rageBar.material.SetFloat ("_Width", rage / rageLimit);
+		width = rageBar.material.GetFloat ("_Width");
+
 		// Rotate to camera orientation
 		cloudPlane.transform.rotation = Quaternion.identity;
 		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);

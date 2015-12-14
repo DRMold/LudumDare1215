@@ -5,7 +5,6 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 	}
 
-
     SubShader {
     	Pass {
         	Cull Off // turn off triangle culling, alternatives are:
@@ -45,7 +44,7 @@
  
          float4 frag(vertexOutput input) : COLOR 
          {
-         	if (input.posInObjectCoords.x >= _Width - 0.5) 
+         	if (input.posInObjectCoords.x >= (_Width * 2 - 1) * 4 ) 
             {
                discard; // drop the fragment if y coordinate > 0
             }
