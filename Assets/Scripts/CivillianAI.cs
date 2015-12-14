@@ -8,8 +8,12 @@ public class CivillianAI : MonoBehaviour {
 	private float distance;
 	private Transform startTrans;
 	private Transform player;
+	private Animation anim;
 
 	void Start () {
+		anim = GetComponent<Animation>();
+		anim["Run"].speed = 10.0f; 
+
 		player = GameObject.FindWithTag ("Player").transform;
 		GetComponent<Rigidbody>().velocity = new Vector3(
 				0.0f, 
@@ -17,7 +21,15 @@ public class CivillianAI : MonoBehaviour {
 				-this.transform.position.z
 			) * GameMaster.worldRot; 
 	}
-	
+
+	void Update () {
+		if (anim.isPlaying == false) {
+			if (true) {
+				anim.Play("Run");
+			}
+		}
+	}
+
 	void LateUpdate () {
 		distance = Vector3.Distance (this.transform.position, player.position);
 		if (distance < threshold ) {
@@ -32,8 +44,13 @@ public class CivillianAI : MonoBehaviour {
 		transform.rotation = Quaternion.LookRotation (transform.position - player.position);
 
 		// Where are we running to?
-		Vector3 runTo = transform.position + transform.forward * Random.Range (5, 25);
-		GetComponent<Rigidbody> ().velocity = 0.25f * runTo * GameMaster.worldRot;
+		Vector3 runTo = Vector3.MoveTowards
+			(
+				this.transform.position, 
+				GameObject.FindGameObjectWithTag ("Building").transform.position,
+				GameMaster.worldRot
+			);
+		GetComponent<Rigidbody> ().velocity = 0.25f * runTo;
 	}
 
 	void OnCollisionEnter(Collision coll) {
