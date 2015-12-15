@@ -23,6 +23,8 @@ public class CivillianAI : MonoBehaviour {
 	}
 
 	void Update () {
+		transform.rotation = Quaternion.LookRotation (transform.forward);
+
 		if (anim.isPlaying == false) {
 			if (true) {
 				anim.Play("Run");

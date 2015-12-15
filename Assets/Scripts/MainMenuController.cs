@@ -14,8 +14,12 @@ public class MainMenuController : MonoBehaviour {
 			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit)){
-				if (hit.transform.gameObject.name == "Start") {
-					// DO STUFF HERE
+				if (hit.transform.gameObject.name == "StartButton") {
+					Application.LoadLevel (1);
+				} else if (hit.transform.gameObject.name == "QuitButton") {
+					Application.Quit();
+				} else if (hit.transform.gameObject.name == "CreditButton") {
+					// Give Credit where credit is due
 				}
 			}
 		}
