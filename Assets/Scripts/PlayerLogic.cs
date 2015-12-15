@@ -9,7 +9,7 @@ public class Boundary
 { public float xMin, xMax, zMin, zMax; }
 
 public class PlayerLogic : MonoBehaviour {
-	public GameObject cloudPlane;
+	public GameObject frontCloudPlane;
 	public Camera mainCam;
 	public bool autoInit = false;
 
@@ -30,8 +30,8 @@ public class PlayerLogic : MonoBehaviour {
 	public Sprite sprite1;
 	public Sprite sprite2;
 	public Sprite sprite3;
-	public Sprite baseCloud1;
-	public Sprite baseCloud2;
+	public Sprite[] baseClouds;
+
 	public List<GameObject> cloudGreebles = new List<GameObject>();
 	private Image healthUI;
 
@@ -47,10 +47,10 @@ public class PlayerLogic : MonoBehaviour {
 
 	void SwitchBaseSprite () {
 		if (gameController.playerState == 1) {
-			if (cloudPlane.GetComponent<SpriteRenderer>().sprite == baseCloud1) {
-				cloudPlane.GetComponent<SpriteRenderer>().sprite = baseCloud2;
+			if (frontCloudPlane.GetComponent<SpriteRenderer>().sprite == baseClouds[0]) {
+				frontCloudPlane.GetComponent<SpriteRenderer>().sprite = baseClouds[1];
 			} else {
-				cloudPlane.GetComponent<SpriteRenderer>().sprite = baseCloud1;
+				frontCloudPlane.GetComponent<SpriteRenderer>().sprite = baseClouds[0];
 			}
 		}
 	}
@@ -76,13 +76,13 @@ public class PlayerLogic : MonoBehaviour {
 
 	void SpawnCloudGreebles () {
 		float chance = Random.value;
-		if (chance <= 0.66f) {
+		if (chance <= 0.70f) {
 			GameObject greeble = Instantiate(cloudGreebles[Random.Range(0,cloudGreebles.Count-1)]);
 			greeble.transform.parent = this.gameObject.transform;
 			greeble.transform.localPosition = new Vector3 (Random.Range (-xCloudSpawnRange,xCloudSpawnRange),Random.Range(-yCloudSpawnRange, yCloudSpawnRange), -0.1f);
-			greeble.GetComponent<Rigidbody>().AddTorque(new Vector3(0.0f,0.0f,Random.Range(-100f, 100f)));
-			greeble.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-0.3f,0.3f),Random.Range(2.0f, 10.0f),0.0f));
-			StartCoroutine(Fade (greeble,1.5f,0.0f));
+			greeble.GetComponent<Rigidbody>().AddTorque(new Vector3(0.0f,0.0f,Random.Range(-20f, 20f)));
+			greeble.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-0.3f,0.3f),Random.Range(0.2f, 2.0f),0.0f));
+			StartCoroutine(Fade (greeble,1.0f,0.0f));
 			Destroy(greeble,1.5f);
 		}
 	}
@@ -95,14 +95,14 @@ public class PlayerLogic : MonoBehaviour {
 	}
 
 	void AnimateOnUpdate() {
-		Vector3 newScale = cloudPlane.transform.localScale;
+		Vector3 newFrontScale = frontCloudPlane.transform.localScale;
 		float pingPong = Mathf.PingPong(Time.time / 2, 0.2f) + 0.4f;
 		if (currentAxis == 0) {
-			newScale.x = pingPong;
+			newFrontScale.x = pingPong;
 		} else {
-			newScale.y = pingPong;
+			newFrontScale.y = pingPong;
 		}
-		cloudPlane.transform.localScale = newScale;
+		frontCloudPlane.transform.localScale = newFrontScale;
 	}
 
 	void Awake () {
@@ -147,10 +147,9 @@ public class PlayerLogic : MonoBehaviour {
 		health = 3;
 		myBody = GetComponent<Rigidbody> ();
 		rageBar = GameObject.FindGameObjectWithTag ("Rage").GetComponent<Renderer> ();
-		cloudPlane = transform.Find("CloudPlane").gameObject;
+		frontCloudPlane = transform.Find("frontCloudPlane").gameObject;
 		gameController = GameObject.FindWithTag("GameMaster").GetComponent<GameController>();
 		healthUI = GameObject.FindGameObjectWithTag ("HealthUI").GetComponent<Image> ();
-		baseSprite = cloudPlane.GetComponent<SpriteRenderer>().sprite;
 		currentAxis = 0;
 		healthUI.sprite = sprite0;
 		// set children to parents
@@ -200,8 +199,8 @@ public class PlayerLogic : MonoBehaviour {
 		width = rageBar.material.GetFloat ("_Width");
 
 		// Rotate to camera orientation
-		cloudPlane.transform.rotation = Quaternion.identity;
-		cloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
+		frontCloudPlane.transform.rotation = Quaternion.identity;
+		frontCloudPlane.transform.LookAt(transform.position + mainCam.transform.rotation * Vector3.forward, mainCam.transform.rotation * Vector3.up);
 		AnimateOnUpdate();
 		// clamp bottom to top of ground`
 	}
